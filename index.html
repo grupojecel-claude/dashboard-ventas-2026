@@ -1,0 +1,1190 @@
+<!DOCTYPE html><html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grupo Jecel C.A. · Análisis de Piezas Vendidas 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   CSS VARIABLES & RESET
+   ============================================================ */
+:root {
+  --bg:        #0B1220;
+  --card:      #111827;
+  --card-alt:  #0F1929;
+  --hover:     #1E293B;
+  --border:    rgba(255,255,255,0.06);
+  --primary:   #3B82F6;
+  --secondary: #60A5FA;
+  --accent:    #818CF8;
+  --text:      #FFFFFF;
+  --text-muted:#94A3B8;
+  --text-dim:  #64748B;
+  --success:   #22C55E;
+  --warning:   #F59E0B;
+  --error:     #EF4444;
+  --radius:    14px;
+  --radius-sm: 8px;
+  --shadow:    0 4px 24px rgba(0,0,0,0.4);
+  --shadow-sm: 0 2px 12px rgba(0,0,0,0.3);
+  --transition:all 0.25s cubic-bezier(0.4,0,0.2,1);
+}
+
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { font-size:16px; scroll-behavior:smooth; }
+body {
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+.app {
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+}
+
+.topbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:16px 32px;
+  border-bottom:1px solid var(--border);
+  background:rgba(11,18,32,0.92);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  position:sticky;
+  top:0;
+  z-index:100;
+}
+
+.brand {
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.brand-icon {
+  width:36px; height:36px;
+  background:linear-gradient(135deg,var(--primary),var(--accent));
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  flex-shrink:0;
+}
+
+.brand-name {
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+  letter-spacing:-0.3px;
+}
+
+.brand-sub {
+  font-size:11px;
+  font-weight:400;
+  color:var(--text-muted);
+  letter-spacing:0.5px;
+  text-transform:uppercase;
+}
+
+.topbar-right {
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+
+.data-badge {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--text-muted);
+  background:var(--card);
+  border:1px solid var(--border);
+  padding:6px 12px;
+  border-radius:20px;
+}
+
+.data-badge .dot {
+  width:6px; height:6px;
+  border-radius:50%;
+  background:var(--success);
+  animation:pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { opacity:1; }
+  50%      { opacity:0.4; }
+}
+
+.main {
+  flex:1;
+  padding:28px 32px 40px;
+  max-width:1600px;
+  width:100%;
+  margin:0 auto;
+}
+
+/* ============================================================
+   SECTION HEADER
+   ============================================================ */
+.section-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.section-title {
+  font-size:13px;
+  font-weight:600;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+}
+
+/* ============================================================
+   FILTER BAR
+   ============================================================ */
+.filter-bar {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:28px;
+  flex-wrap:wrap;
+}
+
+.filter-label {
+  font-size:12px;
+  color:var(--text-muted);
+  font-weight:500;
+  margin-right:4px;
+}
+
+.filter-btn {
+  padding:7px 16px;
+  border-radius:20px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text-muted);
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  transition:var(--transition);
+  font-family:inherit;
+}
+
+.filter-btn:hover {
+  border-color:var(--primary);
+  color:var(--secondary);
+  background:rgba(59,130,246,0.08);
+}
+
+.filter-btn.active {
+  background:var(--primary);
+  border-color:var(--primary);
+  color:#fff;
+  font-weight:600;
+  box-shadow:0 0 16px rgba(59,130,246,0.35);
+}
+
+/* ============================================================
+   KPI CARDS
+   ============================================================ */
+.kpi-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.kpi-card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:22px 24px;
+  position:relative;
+  overflow:hidden;
+  transition:var(--transition);
+  cursor:default;
+}
+
+.kpi-card::before {
+  content:'';
+  position:absolute;
+  top:0; left:0; right:0;
+  height:2px;
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+  opacity:0;
+  transition:var(--transition);
+}
+
+.kpi-card:hover {
+  border-color:rgba(59,130,246,0.3);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(0,0,0,0.4);
+}
+
+.kpi-card:hover::before { opacity:1; }
+
+.kpi-card.highlight {
+  border-color:rgba(59,130,246,0.25);
+  background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(17,24,39,1));
+}
+
+.kpi-card.highlight::before { opacity:1; }
+
+.kpi-header {
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.kpi-icon {
+  width:38px; height:38px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  flex-shrink:0;
+}
+
+.kpi-icon.blue   { background:rgba(59,130,246,0.15); }
+.kpi-icon.green  { background:rgba(34,197,94,0.15); }
+.kpi-icon.purple { background:rgba(129,140,248,0.15); }
+
+.kpi-label {
+  font-size:11.5px;
+  font-weight:500;
+  color:var(--text-muted);
+  text-transform:uppercase;
+  letter-spacing:0.7px;
+  line-height:1.3;
+  max-width:180px;
+}
+
+.kpi-value {
+  font-size:38px;
+  font-weight:800;
+  color:var(--text);
+  letter-spacing:-2px;
+  line-height:1;
+  margin-bottom:8px;
+  font-variant-numeric:tabular-nums;
+}
+
+.kpi-value span {
+  font-size:16px;
+  font-weight:500;
+  color:var(--text-muted);
+  letter-spacing:0;
+}
+
+.kpi-footer {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  color:var(--text-dim);
+}
+
+.kpi-footer .badge {
+  font-size:11px;
+  font-weight:600;
+  padding:2px 7px;
+  border-radius:10px;
+}
+
+.badge.up   { background:rgba(34,197,94,0.15); color:var(--success); }
+.badge.peak { background:rgba(129,140,248,0.15); color:var(--accent); }
+.badge.info { background:rgba(59,130,246,0.15); color:var(--secondary); }
+
+/* ============================================================
+   CHART GRID
+   ============================================================ */
+.chart-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:24px;
+}
+
+.chart-full {
+  grid-column:1 / -1;
+}
+
+/* ============================================================
+   CARD BASE
+   ============================================================ */
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px;
+  transition:var(--transition);
+}
+
+.card:hover {
+  border-color:rgba(59,130,246,0.15);
+}
+
+.card-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px;
+}
+
+.card-title {
+  font-size:14px;
+  font-weight:600;
+  color:var(--text);
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.card-title .icon {
+  font-size:16px;
+  opacity:0.7;
+}
+
+.card-meta {
+  font-size:11px;
+  color:var(--text-dim);
+  background:var(--hover);
+  padding:4px 10px;
+  border-radius:12px;
+}
+
+/* ============================================================
+   MONTHLY BAR CHART
+   ============================================================ */
+.monthly-chart {
+  display:flex;
+  align-items:flex-end;
+  gap:12px;
+  height:200px;
+  padding-top:10px;
+}
+
+.bar-group {
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:6px;
+  height:100%;
+}
+
+.bar-wrap {
+  flex:1;
+  width:100%;
+  display:flex;
+  align-items:flex-end;
+  position:relative;
+}
+
+.bar {
+  width:100%;
+  border-radius:6px 6px 0 0;
+  background:linear-gradient(180deg,var(--primary),rgba(59,130,246,0.5));
+  position:relative;
+  transition:height 1s cubic-bezier(0.34,1.56,0.64,1);
+  cursor:pointer;
+  min-height:4px;
+}
+
+.bar.active {
+  background:linear-gradient(180deg,var(--secondary),var(--primary));
+  box-shadow:0 0 20px rgba(59,130,246,0.4);
+}
+
+.bar:hover {
+  background:linear-gradient(180deg,#93C5FD,var(--secondary));
+  box-shadow:0 0 20px rgba(59,130,246,0.3);
+}
+
+.bar-tooltip {
+  position:absolute;
+  bottom:calc(100% + 8px);
+  left:50%;
+  transform:translateX(-50%);
+  background:#1E293B;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px 10px;
+  font-size:12px;
+  font-weight:600;
+  color:var(--text);
+  white-space:nowrap;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 0.2s;
+  z-index:10;
+  box-shadow:var(--shadow-sm);
+}
+
+.bar:hover .bar-tooltip { opacity:1; }
+
+.bar-label {
+  font-size:11px;
+  font-weight:500;
+  color:var(--text-muted);
+  text-align:center;
+}
+
+.bar-value {
+  font-size:11px;
+  font-weight:700;
+  color:var(--text-muted);
+  text-align:center;
+}
+
+/* ============================================================
+   HORIZONTAL BAR CHART
+   ============================================================ */
+.h-bar-list {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.h-bar-item {
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  animation:fadeUp 0.5s ease both;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(8px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+.h-bar-header {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.h-bar-rank {
+  font-size:10px;
+  font-weight:700;
+  color:var(--text-dim);
+  width:18px;
+  flex-shrink:0;
+  text-align:right;
+}
+
+.h-bar-name {
+  font-size:12px;
+  font-weight:500;
+  color:var(--text);
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.h-bar-qty {
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-muted);
+  flex-shrink:0;
+  font-variant-numeric:tabular-nums;
+  min-width:40px;
+  text-align:right;
+}
+
+.h-bar-track {
+  height:5px;
+  background:var(--hover);
+  border-radius:3px;
+  overflow:hidden;
+}
+
+.h-bar-fill {
+  height:100%;
+  border-radius:3px;
+  transition:width 1s cubic-bezier(0.34,1.56,0.64,1);
+  width:0%;
+}
+
+.h-bar-fill.annual {
+  background:linear-gradient(90deg,var(--primary),var(--accent));
+}
+
+.h-bar-fill.recent {
+  background:linear-gradient(90deg,var(--success),#34D399);
+}
+
+.h-bar-item:nth-child(1)  { animation-delay:0.05s; }
+.h-bar-item:nth-child(2)  { animation-delay:0.10s; }
+.h-bar-item:nth-child(3)  { animation-delay:0.15s; }
+.h-bar-item:nth-child(4)  { animation-delay:0.20s; }
+.h-bar-item:nth-child(5)  { animation-delay:0.25s; }
+.h-bar-item:nth-child(6)  { animation-delay:0.30s; }
+.h-bar-item:nth-child(7)  { animation-delay:0.35s; }
+.h-bar-item:nth-child(8)  { animation-delay:0.40s; }
+.h-bar-item:nth-child(9)  { animation-delay:0.45s; }
+.h-bar-item:nth-child(10) { animation-delay:0.50s; }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.footer {
+  padding:16px 32px;
+  border-top:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.footer-left {
+  font-size:11px;
+  color:var(--text-dim);
+}
+
+.footer-right {
+  font-size:11px;
+  color:var(--text-dim);
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.footer-right a {
+  color:var(--secondary);
+  text-decoration:none;
+  font-weight:500;
+}
+
+/* ============================================================
+   LOADING OVERLAY
+   ============================================================ */
+#loading {
+  position:fixed;
+  inset:0;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  gap:16px;
+  transition:opacity 0.5s;
+}
+
+.spinner {
+  width:44px; height:44px;
+  border:3px solid var(--border);
+  border-top-color:var(--primary);
+  border-radius:50%;
+  animation:spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform:rotate(360deg); } }
+
+.loading-text {
+  font-size:13px;
+  color:var(--text-muted);
+  font-weight:500;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns:1fr 1fr; }
+}
+
+@media (max-width: 768px) {
+  .main { padding:16px; }
+  .topbar { padding:12px 16px; }
+  .kpi-grid { grid-template-columns:1fr; }
+  .chart-grid { grid-template-columns:1fr; }
+  .chart-full { grid-column:1; }
+  .kpi-value { font-size:28px; }
+  .filter-bar { gap:6px; }
+  .filter-btn { padding:5px 12px; font-size:11px; }
+  .monthly-chart { height:150px; gap:6px; }
+  .footer { flex-direction:column; gap:6px; text-align:center; }
+}
+
+@media (max-width: 480px) {
+  .brand-sub { display:none; }
+  .data-badge { display:none; }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.text-right { text-align:right; }
+.flex-center { display:flex; align-items:center; justify-content:center; }
+.mt-4 { margin-top:4px; }
+.mt-8 { margin-top:8px; }
+.mt-16 { margin-top:16px; }
+.divider {
+  height:1px;
+  background:var(--border);
+  margin:16px 0;
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Cargando datos de ventas...</div>
+</div>
+
+<!-- APP -->
+<div class="app" id="app" style="opacity:0;transition:opacity 0.5s;">
+
+  <!-- TOPBAR -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-icon">JC</div>
+      <div>
+        <div class="brand-name">Grupo Jecel C.A.</div>
+        <div class="brand-sub">Análisis de Piezas Vendidas 2026</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="data-badge">
+        <span class="dot"></span>
+        <span id="data-range">Ene 13 – Jul 15, 2026</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <span class="filter-label">Filtrar por mes:</span>
+      <button class="filter-btn active" data-month="all" onclick="applyFilter('all')">Todos</button>
+      <button class="filter-btn" data-month="2026-01" onclick="applyFilter('2026-01')">Enero</button>
+      <button class="filter-btn" data-month="2026-02" onclick="applyFilter('2026-02')">Febrero</button>
+      <button class="filter-btn" data-month="2026-03" onclick="applyFilter('2026-03')">Marzo</button>
+      <button class="filter-btn" data-month="2026-04" onclick="applyFilter('2026-04')">Abril</button>
+      <button class="filter-btn" data-month="2026-05" onclick="applyFilter('2026-05')">Mayo</button>
+      <button class="filter-btn" data-month="2026-06" onclick="applyFilter('2026-06')">Junio</button>
+      <button class="filter-btn" data-month="2026-07" onclick="applyFilter('2026-07')">Julio</button>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpi-grid" id="kpi-grid">
+      <!-- populated by JS -->
+    </div>
+
+    <!-- CHARTS ROW 1: Monthly (full width) -->
+    <div class="card chart-full" style="margin-bottom:16px;">
+      <div class="card-header">
+        <div class="card-title">
+          <span class="icon">📊</span> Piezas Vendidas por Mes
+        </div>
+        <div class="card-meta" id="monthly-meta">Ene – Jul 2026</div>
+      </div>
+      <div class="monthly-chart" id="monthly-chart">
+        <!-- bars populated by JS -->
+      </div>
+    </div>
+
+    <!-- CHARTS ROW 2: Top 10 anual + Top 10 últimos 10 días -->
+    <div class="chart-grid">
+
+      <!-- TOP 10 ANUAL / MES -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🏆</span> <span id="top10-title">Top 10 Productos — Año 2026</span>
+          </div>
+          <div class="card-meta" id="annual-total-meta">Total año</div>
+        </div>
+        <div class="h-bar-list" id="top10-annual">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+      <!-- TOP 10 ÚLTIMOS 10 DÍAS -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span class="icon">🔥</span> Top 10 — Últimos 10 Días
+          </div>
+          <div class="card-meta" id="last10-meta">Jul 2 – Jul 15, 2026</div>
+        </div>
+        <div class="h-bar-list" id="top10-recent">
+          <!-- populated by JS -->
+        </div>
+      </div>
+
+    </div><!-- /chart-grid -->
+
+  </main><!-- /main -->
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-left">
+      Grupo Jecel C.A. · Mayorista de Tecnología · Venezuela
+    </div>
+    <div class="footer-right">
+      Fuente:
+      <span style="color:var(--secondary);font-weight:500;">Odoo sale.report</span>
+      · Actualizado: 15 Jul 2026 (auto)
+    </div>
+  </footer>
+
+</div><!-- /app -->
+
+<script>
+/* ============================================================
+   CONFIG
+   ============================================================ */
+// Fuente de datos gestionada internamente (Google Drive / Odoo)
+
+/* ============================================================
+   DATA — extraído de: Tabla dinámica Análisis de ventas (sale.report).xlsx
+   Período: 13 Ene 2026 – 15 Jul 2026
+   Última actualización automática: 15 Jul 2026
+   ============================================================ */
+const MONTHLY_DATA = {
+  "2026-01": { label: "Ene", units: 1335 },
+  "2026-02": { label: "Feb", units: 1655 },
+  "2026-03": { label: "Mar", units: 2384 },
+  "2026-04": { label: "Abr", units: 1660 },
+  "2026-05": { label: "May", units: 1382 },
+  "2026-06": { label: "Jun", units: 1273 },
+  "2026-07": { label: "Jul", units: 389 }
+};
+
+const DAILY_DATA = {
+"2026-01-13":370,"2026-01-14":132,"2026-01-15":8,"2026-01-16":70,
+"2026-01-17":46,"2026-01-19":39,"2026-01-20":66,"2026-01-21":32,
+"2026-01-22":293,"2026-01-23":14,"2026-01-26":102,"2026-01-27":33,
+"2026-01-28":43,"2026-01-29":5,"2026-01-30":82,"2026-02-02":21,
+"2026-02-03":21,"2026-02-04":10,"2026-02-06":2,"2026-02-07":30,
+"2026-02-09":151,"2026-02-10":24,"2026-02-11":2,"2026-02-12":22,
+"2026-02-13":567,"2026-02-14":34,"2026-02-18":132,"2026-02-19":119,
+"2026-02-20":34,"2026-02-23":72,"2026-02-24":258,"2026-02-25":119,
+"2026-02-26":8,"2026-02-27":29,"2026-03-02":96,"2026-03-03":115,
+"2026-03-04":28,"2026-03-05":56,"2026-03-06":33,"2026-03-09":22,
+"2026-03-10":6,"2026-03-11":154,"2026-03-12":13,"2026-03-16":235,
+"2026-03-17":317,"2026-03-18":257,"2026-03-19":43,"2026-03-20":102,
+"2026-03-23":34,"2026-03-24":405,"2026-03-25":212,"2026-03-26":46,
+"2026-03-27":114,"2026-03-28":20,"2026-03-30":68,"2026-03-31":8,
+"2026-04-06":310,"2026-04-07":45,"2026-04-08":85,"2026-04-09":6,
+"2026-04-10":71,"2026-04-11":160,"2026-04-13":149,"2026-04-14":25,
+"2026-04-15":12,"2026-04-16":30,"2026-04-17":64,"2026-04-19":13,
+"2026-04-20":45,"2026-04-21":189,"2026-04-22":40,"2026-04-23":20,
+"2026-04-24":227,"2026-04-27":48,"2026-04-28":85,"2026-04-29":35,
+"2026-04-30":1,"2026-05-04":180,"2026-05-05":39,"2026-05-06":81,
+"2026-05-07":43,"2026-05-08":33,"2026-05-09":20,"2026-05-11":178,
+"2026-05-12":97,"2026-05-13":138,"2026-05-14":12,"2026-05-15":100,
+"2026-05-18":81,"2026-05-19":33,"2026-05-20":18,"2026-05-21":100,
+"2026-05-22":3,"2026-05-25":35,"2026-05-26":51,"2026-05-27":13,
+"2026-05-28":77,"2026-05-29":34,"2026-05-30":16,"2026-06-01":115,
+"2026-06-02":10,"2026-06-03":21,"2026-06-04":148,"2026-06-05":81,
+"2026-06-08":90,"2026-06-09":40,"2026-06-10":123,"2026-06-11":95,
+"2026-06-12":9,"2026-06-15":34,"2026-06-16":23,"2026-06-17":45,
+"2026-06-18":67,"2026-06-19":34,"2026-06-22":35,"2026-06-23":71,
+"2026-06-25":81,"2026-06-26":2,"2026-06-29":91,"2026-06-30":58,
+"2026-07-01":36,"2026-07-02":3,"2026-07-03":76,"2026-07-06":22,
+"2026-07-07":43,"2026-07-08":23,"2026-07-09":9,"2026-07-10":33,
+"2026-07-13":71,"2026-07-14":24,"2026-07-15":49
+};
+
+const TOP10_ANNUAL = [
+  ["ONN WATCH FHD GOOGLE TV", 2768],
+  ["CHUWI HI10 XPRO 10.1 7000MAH 4G TABLET 4+128GB", 510],
+  ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 445],
+  ["ALCATEL 3 T451A 3+64GB", 421],
+  ["SAMSUNG POWER ADAPTER 25W USB-C", 354],
+  ["HOTWAV A17 PRO MAX", 273],
+  ["ITEL A100C A6611L", 242],
+  ["SKY 65PRO", 220],
+  ["LENOVO IDEAPAD SLIM 3 82XB00HVUS N100 4GB+128GB SSD 15.6", 199],
+  ["QLINK TAB SCEPTER 8 WIFI", 182]
+];
+
+const TOP10_MONTHLY = {
+  "2026-01": [
+    ["ONN WATCH FHD GOOGLE TV", 400],
+    ["CHUWI HI10 XPRO 10.1 7000MAH 4G TABLET 4+128GB", 381],
+    ["XIAOMI REDMI BUDS 6 PLAY BLUE", 58],
+    ["CHUWI HEROBOOK PLUS 15.6INCH INTEL N4020 LAPTOPS 8+256 SSD", 44],
+    ["XIAOMI REDMI 15C", 38],
+    ["CHUWI UNITECH 27INCH ALL IN ONE WITH AMD R5-6600H 16GB 1TB SSD", 37],
+    ["XIAOMI REDMI BUDS 6 PLAY WHITE", 31],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 29],
+    ["ACER ETBOOK I3-10100Y 8GB+256GB SSD 14", 28],
+    ["SAMSUNG A06", 25]
+  ],
+  "2026-02": [
+    ["ONN WATCH FHD GOOGLE TV", 670],
+    ["XIAOMI REDMI BUDS 6 PLAY WHITE", 119],
+    ["ALCATEL 3 T451A 3+64GB", 98],
+    ["SMART/RG AC1200 WIFI RANGE ENTENDER", 79],
+    ["ALCATEL 31 PRIME T451A1 4+128GB", 62],
+    ["XIAOMI REDMI A5", 60],
+    ["QLINK TAB SCEPTER 8 WIFI", 58],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 57],
+    ["CHUWI HI10 XPRO 10.1 7000MAH 4G TABLET 4+128GB", 57],
+    ["XIAOMI REDMI BUDS 6 PLAY BLUE", 54]
+  ],
+  "2026-03": [
+    ["ONN WATCH FHD GOOGLE TV", 880],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 181],
+    ["SAMSUNG POWER ADAPTER 25W USB-C", 155],
+    ["MASCARILLA 1 DISPOSABLE FACE MASK. N", 120],
+    ["HOTWAV A17 PRO MAX", 117],
+    ["LENOVO IDEAPAD SLIM 3 82XB00HVUS N100 4GB+128GB SSD 15.6", 100],
+    ["CHUWI HI10 XPRO 10.1 7000MAH 4G TABLET 4+128GB", 61],
+    ["ACER ETBOOK I3-10100Y 8GB+256GB SSD 14", 50],
+    ["HOTWAV NOTE 16 PRO", 44],
+    ["SKY 65PRO", 41]
+  ],
+  "2026-04": [
+    ["ONN WATCH FHD GOOGLE TV", 355],
+    ["SKY 65PRO", 99],
+    ["MSI MONITOR PRO MP242L 24FHD", 86],
+    ["ITEL A100C A6611L", 86],
+    ["ARGOM COMBO TECLADO MOUSE ALAMBRICO ARG-KB-7418", 85],
+    ["AZZA CORNETA MULTIMEDIA 2.0 SPAZ-887", 85],
+    ["FORZA UPS INTERACTIVA NT-1011 1000VA/500W", 85],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 80],
+    ["LENOVO IDEAPAD SLIM 3 82XB00HVUS N100 4GB+128GB SSD 15.6", 65],
+    ["HOTWAV NOTE 16 PRO", 62]
+  ],
+  "2026-05": [
+    ["ONN WATCH FHD GOOGLE TV", 424],
+    ["ITEL A100C A6611L", 154],
+    ["SAMSUNG POWER ADAPTER 25W USB-C", 104],
+    ["HP 14 LAPTOP INTEL PROCESSOR N150 4GB RAM 128GB UFS NATURAL SILVER", 70],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 47],
+    ["LENOVO IDEAPAD SLIM 3 82XB00HVUS N100 4GB+128GB SSD 15.6", 31],
+    ["HOTWAV NOTE 17 MAX 4+64GB", 30],
+    ["CHUWI GEMIBOOK PLUS 15.6INCH LAPTOP WITH N150 16+512 SSD", 28],
+    ["HOTWAV A17 PRO MAX", 27],
+    ["SKY 65PRO", 27]
+  ],
+  "2026-06": [
+    ["ALCATEL 3 T451A 3+64GB", 258],
+    ["SAMSUNG GALAXY TAB A9+ X218U 11 5G", 121],
+    ["ZTE A56 PRO", 93],
+    ["HP 14 LAPTOP INTEL PROCESSOR N150 4GB RAM 128GB UFS NATURAL SILVER", 66],
+    ["HOTWAV A17 PRO MAX", 60],
+    ["SKY 65PRO", 46],
+    ["ONN WATCH FHD GOOGLE TV", 39],
+    ["CUBOT U1", 36],
+    ["MAXWEST TAB ASTRO 10R 10.1 LTE", 32],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 31]
+  ],
+  "2026-07": [
+    ["ALCATEL 3 T451A 3+64GB", 63],
+    ["QLINK TAB SCEPTER 8 WIFI", 55],
+    ["MAXWEST TAB ASTRO 10R 10.1 LTE", 33],
+    ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 20],
+    ["HOTWAV A26 ULTRA", 20],
+    ["SAMSUNG POWER ADAPTER 25W USB-C", 20],
+    ["ZTE A56 PRO", 14],
+    ["HOTWAV A17 PRO MAX", 13],
+    ["HP 14 LAPTOP INTEL PROCESSOR N150 4GB RAM 128GB UFS NATURAL SILVER", 12],
+    ["SAMSUNG A06", 10]
+  ]
+};
+
+const TOP10_LAST10 = [
+  ["ALCATEL 3 T451A 3+64GB", 58],
+  ["QLINK TAB SCEPTER 8 WIFI", 55],
+  ["MAXWEST TAB ASTRO 10R 10.1 LTE", 32],
+  ["CHUWI COREBOOK I3-10100Y 8+256GB SSD 14", 20],
+  ["HOTWAV A26 ULTRA", 20],
+  ["SAMSUNG POWER ADAPTER 25W USB-C", 20],
+  ["ZTE A56 PRO", 14],
+  ["HOTWAV A17 PRO MAX", 13],
+  ["HP 14 LAPTOP INTEL PROCESSOR N150 4GB RAM 128GB UFS NATURAL SILVER", 12],
+  ["BLU M8L 2022", 10]
+];
+
+const GRAND_TOTAL = 10078; // excl. artículos Lensun
+const LAST10_DATES_LABEL = "Jul 2 – Jul 15, 2026";
+const DATA_FROM = "2026-01-13";
+const DATA_TO   = "2026-07-15";
+
+/* ============================================================
+   STATE
+   ============================================================ */
+let activeFilter = "all";
+
+/* ============================================================
+   UTILS
+   ============================================================ */
+function fmt(n) {
+  return Math.round(n).toLocaleString("es-VE");
+}
+
+function getMonthUnits(month) {
+  return MONTHLY_DATA[month] ? MONTHLY_DATA[month].units : 0;
+}
+
+function getTotalForFilter(filter) {
+  if (filter === "all") return GRAND_TOTAL;
+  return getMonthUnits(filter);
+}
+
+function getMonthName(key) {
+  const names = {
+    "2026-01":"Enero","2026-02":"Febrero","2026-03":"Marzo",
+    "2026-04":"Abril","2026-05":"Mayo","2026-06":"Junio","2026-07":"Julio"
+  };
+  return names[key] || key;
+}
+
+function getPeakMonth() {
+  let peak = null, max = 0;
+  Object.entries(MONTHLY_DATA).forEach(([k,v]) => {
+    if (v.units > max) { max = v.units; peak = k; }
+  });
+  return peak;
+}
+
+/* ============================================================
+   RENDER KPIs
+   ============================================================ */
+function renderKPIs(filter) {
+  const grid = document.getElementById("kpi-grid");
+
+  const totalAnual   = GRAND_TOTAL;
+  const totalMes     = filter === "all" ? null : getMonthUnits(filter);
+  const peakMonth    = getPeakMonth();
+  const peakLabel    = getMonthName(peakMonth);
+  const peakUnits    = MONTHLY_DATA[peakMonth].units;
+  const totalLast10  = TOP10_LAST10.reduce((s,[,q]) => s+q, 0);
+  const activeMesLabel = filter === "all" ? "—" : getMonthName(filter);
+  const showMes = filter !== "all";
+
+  grid.innerHTML = `
+    <!-- KPI 1: Total año -->
+    <div class="kpi-card highlight">
+      <div class="kpi-header">
+        <div>
+          <div class="kpi-label">Total Piezas Vendidas<br>Año 2026</div>
+        </div>
+        <div class="kpi-icon blue">📦</div>
+      </div>
+      <div class="kpi-value">${fmt(totalAnual)}<span> uds</span></div>
+      <div class="kpi-footer">
+        <span class="badge up">▲ Activo</span>
+        Ene 13 – Jul 15, 2026
+      </div>
+    </div>
+
+    <!-- KPI 2: Mes seleccionado -->
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div>
+          <div class="kpi-label">Piezas Vendidas<br>${showMes ? activeMesLabel : "Mes Seleccionado"}</div>
+        </div>
+        <div class="kpi-icon ${showMes ? 'green' : 'purple'}">📅</div>
+      </div>
+      <div class="kpi-value">
+        ${showMes ? fmt(totalMes) : "—"}
+        ${showMes ? '<span> uds</span>' : ''}
+      </div>
+      <div class="kpi-footer">
+        ${showMes
+          ? `<span class="badge info">${Math.round(totalMes/totalAnual*100)}% del total anual</span>`
+          : '<span style="color:var(--text-dim)">Selecciona un mes en el filtro</span>'
+        }
+      </div>
+    </div>
+
+    <!-- KPI 3: Mes Pico -->
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div>
+          <div class="kpi-label">Mes Pico 2026<br>Mayor volumen</div>
+        </div>
+        <div class="kpi-icon purple">🚀</div>
+      </div>
+      <div class="kpi-value">${fmt(peakUnits)}<span> uds</span></div>
+      <div class="kpi-footer">
+        <span class="badge peak">${peakLabel} 2026</span>
+        ${Math.round(peakUnits/totalAnual*100)}% del año
+      </div>
+    </div>
+  `;
+}
+
+/* ============================================================
+   RENDER MONTHLY CHART
+   ============================================================ */
+function renderMonthlyChart(filter) {
+  const container = document.getElementById("monthly-chart");
+  const months = Object.entries(MONTHLY_DATA);
+  const maxVal = Math.max(...months.map(([,v]) => v.units));
+
+  container.innerHTML = months.map(([key, val]) => {
+    const pct = (val.units / maxVal) * 100;
+    const isActive = filter === "all" || filter === key;
+    const isSelected = filter === key;
+    return `
+      <div class="bar-group">
+        <div class="bar-wrap">
+          <div class="bar ${isSelected ? 'active' : ''}"
+               style="height:${isActive ? pct : pct * 0.35}%;opacity:${isActive ? 1 : 0.3};width:80%;"
+               onclick="applyFilter('${key}')">
+            <div class="bar-tooltip">${val.label}: ${fmt(val.units)} uds</div>
+          </div>
+        </div>
+        <div class="bar-label" style="color:${isSelected ? 'var(--secondary)' : 'var(--text-muted)'}">
+          ${val.label}
+        </div>
+        <div class="bar-value">${fmt(val.units)}</div>
+      </div>
+    `;
+  }).join("");
+
+  // Animate bars in
+  setTimeout(() => {
+    const bars = container.querySelectorAll(".bar");
+    bars.forEach(b => { b.style.transition = "height 0.9s cubic-bezier(0.34,1.56,0.64,1), opacity 0.5s"; });
+  }, 50);
+
+  document.getElementById("monthly-meta").textContent =
+    filter === "all" ? "Ene – Jul 2026" : getMonthName(filter) + " 2026";
+}
+
+/* ============================================================
+   RENDER TOP 10 ANNUAL / POR MES
+   ============================================================ */
+function renderTop10Annual(filter) {
+  const container  = document.getElementById("top10-annual");
+  const titleEl    = document.getElementById("top10-title");
+  const metaEl     = document.getElementById("annual-total-meta");
+
+  const isMonth    = filter !== "all";
+  const data       = isMonth && TOP10_MONTHLY[filter] ? TOP10_MONTHLY[filter] : TOP10_ANNUAL;
+  const monthTotal = isMonth ? (MONTHLY_DATA[filter] ? MONTHLY_DATA[filter].units : 0) : GRAND_TOTAL;
+
+  titleEl.textContent = isMonth
+    ? `Top 10 Productos — ${getMonthName(filter)}`
+    : "Top 10 Productos — Año 2026";
+
+  metaEl.textContent = isMonth
+    ? `${fmt(monthTotal)} uds en ${getMonthName(filter)}`
+    : `${fmt(GRAND_TOTAL)} uds · año completo`;
+
+  const max = data[0][1];
+
+  container.innerHTML = data.map(([name, qty], i) => {
+    const pct = (qty / max) * 100;
+    return `
+      <div class="h-bar-item">
+        <div class="h-bar-header">
+          <span class="h-bar-rank">${i+1}</span>
+          <span class="h-bar-name" title="${name}">${name}</span>
+          <span class="h-bar-qty">${fmt(qty)}</span>
+        </div>
+        <div class="h-bar-track">
+          <div class="h-bar-fill annual" data-pct="${pct}"></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  container.querySelectorAll(".h-bar-fill").forEach(el => { el.style.width = "0%"; });
+  setTimeout(() => {
+    container.querySelectorAll(".h-bar-fill").forEach(el => {
+      el.style.width = el.dataset.pct + "%";
+    });
+  }, 80);
+}
+
+/* ============================================================
+   RENDER TOP 10 RECENT
+   ============================================================ */
+function renderTop10Recent() {
+  const container = document.getElementById("top10-recent");
+  const max = TOP10_LAST10[0][1];
+
+  container.innerHTML = TOP10_LAST10.map(([name, qty], i) => {
+    const pct = (qty / max) * 100;
+    return `
+      <div class="h-bar-item">
+        <div class="h-bar-header">
+          <span class="h-bar-rank">${i+1}</span>
+          <span class="h-bar-name" title="${name}">${name}</span>
+          <span class="h-bar-qty">${fmt(qty)}</span>
+        </div>
+        <div class="h-bar-track">
+          <div class="h-bar-fill recent" data-pct="${pct}"></div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  setTimeout(() => {
+    container.querySelectorAll(".h-bar-fill").forEach(el => {
+      el.style.width = el.dataset.pct + "%";
+    });
+  }, 300);
+}
+
+/* ============================================================
+   FILTER
+   ============================================================ */
+function applyFilter(month) {
+  activeFilter = month;
+
+  document.querySelectorAll(".filter-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.month === month);
+  });
+
+  renderKPIs(month);
+  renderMonthlyChart(month);
+  renderTop10Annual(month);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function init() {
+  renderKPIs("all");
+  renderMonthlyChart("all");
+  renderTop10Annual("all");
+  renderTop10Recent();
+
+  setTimeout(() => {
+    document.getElementById("loading").style.opacity = "0";
+    document.getElementById("app").style.opacity = "1";
+    setTimeout(() => {
+      document.getElementById("loading").style.display = "none";
+    }, 500);
+  }, 600);
+}
+
+window.addEventListener("DOMContentLoaded", init);
+</script>
+</body>
+</html>
